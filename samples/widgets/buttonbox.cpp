@@ -45,8 +45,9 @@
 class ButtonBoxWidgetsPage : public WidgetsPage
 {
 public:
-    ButtonBoxWidgetsPage(WidgetsBookCtrl *book, wxImageList *imaglist)
-        : WidgetsPage(book, imaglist, WidgetsIcon::ButtonBox) // see icons.h/icons.cpp
+    ButtonBoxWidgetsPage(WidgetsBookCtrl *book,
+                         wxVector<wxBitmapBundle>& imaglist)
+        : WidgetsPage(book, imaglist, WidgetsIcon::ButtonBox)
     {
         m_radioMode = nullptr;
         m_chkBitmaps = nullptr;
@@ -98,7 +99,15 @@ private:
     wxGenericButtonBox *m_generic;
 };
 
-IMPLEMENT_WIDGETS_PAGE(ButtonBoxWidgetsPage, "ButtonBox", ALL_CTRLS);
+#if defined(__WXUNIVERSAL__)
+    #define FAMILY_CTRLS UNIVERSAL_CTRLS
+#else
+    #define FAMILY_CTRLS NATIVE_CTRLS
+#endif
+
+IMPLEMENT_WIDGETS_PAGE(ButtonBoxWidgetsPage, "ButtonBox",
+                       FAMILY_CTRLS
+                       );
 
 // ============================================================================
 // implementation
