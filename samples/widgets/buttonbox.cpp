@@ -29,10 +29,7 @@
 
 #include "wx/artprov.h"
 #include "wx/buttonbox.h"
-#include "wx/generic/buttonbox.h" // wxGenericButtonBox is shown on all ports
 #include "wx/spinctrl.h"
-
-#include <functional>
 
 #include "widgets.h"
 #include "icons.h"
@@ -57,30 +54,18 @@ public:
         m_spinWidth = nullptr;
         m_sizerBoxes = nullptr;
         m_box = nullptr;
-        m_generic = nullptr;
     }
 
     virtual void CreateContent() override;
     virtual wxWindow *GetWidget() const override { return m_box; }
-    virtual wxWindow *GetWidget2() const override { return m_generic; }
     virtual void RecreatePage() override;
 
 private:
-    using BoxFunc = std::function<void(wxButtonBoxBase&)>;
-
-    // Everything the page does is applied to both controls, so that the
-    // native and the generic version can be compared directly.
-    void ForEach(const BoxFunc& func)
-    {
-        func(*m_box);
-        func(*m_generic);
-    }
-
     void Reset();
     long GetModeStyle() const;
     void RecreateBoxes();
-    void FillBox(wxButtonBoxBase& box);
-    void AddSegment(wxButtonBoxBase& box, size_t pos, const wxString& label);
+    void FillBox();
+    void AddSegment(size_t pos, const wxString& label);
     wxBitmapBundle GetNextBitmap() const;
     int GetIndex() const { return m_spinIndex->GetValue(); }
 
@@ -96,7 +81,6 @@ private:
 
     wxSizer *m_sizerBoxes;
     wxButtonBox *m_box;
-    wxGenericButtonBox *m_generic;
 };
 
 #if defined(__WXUNIVERSAL__)
@@ -206,25 +190,15 @@ void ButtonBoxWidgetsPage::CreateContent()
                       wxSizerFlags().Expand().Border(wxLEFT | wxRIGHT | wxBOTTOM));
     }
 
-    // right pane: the controls themselves
+    // right pane: the control itself (native under macOS, generic elsewhere)
     m_sizerBoxes = new wxBoxSizer(wxVERTICAL);
 
-    m_sizerBoxes->Add(new wxStaticText(this, wxID_ANY,
-                                       "wxButtonBox (native on macOS):"),
-                      wxSizerFlags().Border(wxBOTTOM));
     m_box = new wxButtonBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                             GetModeStyle());
     m_sizerBoxes->Add(m_box, wxSizerFlags().Border(wxBOTTOM, 20));
 
-    m_sizerBoxes->Add(new wxStaticText(this, wxID_ANY,
-                                       "wxGenericButtonBox (toggle buttons):"),
-                      wxSizerFlags().Border(wxBOTTOM));
-    m_generic = new wxGenericButtonBox(this, wxID_ANY, wxDefaultPosition,
-                                       wxDefaultSize, GetModeStyle());
-    m_sizerBoxes->Add(m_generic, wxSizerFlags().Border(wxBOTTOM, 20));
-
-    ForEach([this](wxButtonBoxBase& b) { FillBox(b); });
-
+    FillBox();
+    
     sizerTop->Add(sizerLeft, wxSizerFlags().Expand().Border(wxALL, 10));
     sizerTop->Add(sizerOps, wxSizerFlags().Expand().Border(wxALL, 10));
     sizerTop->Add(m_sizerBoxes, wxSizerFlags(1).Expand().Border(wxALL, 10));
@@ -243,70 +217,62 @@ void ButtonBoxWidgetsPage::CreateContent()
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
-        const wxString label = m_textLabel->GetValue();
-        ForEach([&](wxButtonBoxBase& b) { AddSegment(b, b.GetCount(), label); });
+        AddSegment(m_box->GetCount(), m_textLabel->GetValue());
     }, ButtonBoxPage_Append);
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
-        const wxString label = m_textLabel->GetValue();
         const size_t pos = GetIndex();
-        ForEach([&](wxButtonBoxBase& b)
-        {
-            if ( pos <= b.GetCount() )
-                AddSegment(b, pos, label);
-        });
+        if ( pos <= m_box->GetCount() )
+            AddSegment(pos, m_textLabel->GetValue());
     }, ButtonBoxPage_Insert);
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
         const size_t n = GetIndex();
-        ForEach([&](wxButtonBoxBase& b) { if ( n < b.GetCount() ) b.Delete(n); });
+        if ( n < m_box->GetCount() )
+            m_box->Delete(n);
     }, ButtonBoxPage_Delete);
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
-        ForEach([](wxButtonBoxBase& b) { b.Clear(); });
+        m_box->Clear();
     }, ButtonBoxPage_Clear);
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
         const size_t n = GetIndex();
-        ForEach([&](wxButtonBoxBase& b) { if ( n < b.GetCount() ) b.SetSelected(n, true); });
+        if ( n < m_box->GetCount() )
+            m_box->SetSelected(n, true);
     }, ButtonBoxPage_Select);
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
         const size_t n = GetIndex();
-        ForEach([&](wxButtonBoxBase& b) { if ( n < b.GetCount() ) b.SetSelected(n, false); });
+        if ( n < m_box->GetCount() )
+            m_box->SetSelected(n, false);
     }, ButtonBoxPage_Deselect);
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
         const size_t n = GetIndex();
-        ForEach([&](wxButtonBoxBase& b)
-        {
-            if ( n < b.GetCount() )
-                b.EnableItem(n, !b.IsItemEnabled(n));
-        });
+        if ( n < m_box->GetCount() )
+            m_box->EnableItem(n, !m_box->IsItemEnabled(n));
     }, ButtonBoxPage_ToggleEnabled);
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
         const size_t n = GetIndex();
-        const wxString label = m_textLabel->GetValue();
-        ForEach([&](wxButtonBoxBase& b) { if ( n < b.GetCount() ) b.SetItemLabel(n, label); });
+        if ( n < m_box->GetCount() )
+            m_box->SetItemLabel(n, m_textLabel->GetValue());
     }, ButtonBoxPage_SetLabel);
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
     {
         const size_t n = GetIndex();
         const int w = m_spinWidth->GetValue();
-        ForEach([&](wxButtonBoxBase& b)
-        {
-            if ( n < b.GetCount() )
-                b.SetItemWidth(n, w > 0 ? w : wxDefaultCoord);
-        });
+        if ( n < m_box->GetCount() )
+            m_box->SetItemWidth(n, w > 0 ? w : wxDefaultCoord);
     }, ButtonBoxPage_SetWidth);
 
     Reset();
@@ -342,26 +308,25 @@ wxBitmapBundle ButtonBoxWidgetsPage::GetNextBitmap() const
                                           wxART_BUTTON);
 }
 
-void ButtonBoxWidgetsPage::AddSegment(wxButtonBoxBase& box, size_t pos,
-                                      const wxString& label)
+void ButtonBoxWidgetsPage::AddSegment(size_t pos, const wxString& label)
 {
-    box.Insert(pos,
-               m_chkLabels->GetValue() ? label : wxString(),
-               m_chkBitmaps->GetValue() ? GetNextBitmap() : wxBitmapBundle());
-    box.SetItemToolTip(pos, wxString::Format("Segment \"%s\"", label));
+    m_box->Insert(pos,
+                  m_chkLabels->GetValue() ? label : wxString(),
+                  m_chkBitmaps->GetValue() ? GetNextBitmap() : wxBitmapBundle());
+    m_box->SetItemToolTip(pos, wxString::Format("Segment \"%s\"", label));
 }
 
-void ButtonBoxWidgetsPage::FillBox(wxButtonBoxBase& box)
+void ButtonBoxWidgetsPage::FillBox()
 {
     static const char* const labels[] = { "Left", "Center", "Right" };
 
     for ( size_t n = 0; n < WXSIZEOF(labels); ++n )
-        AddSegment(box, n, labels[n]);
+        AddSegment(n, labels[n]);
 }
 
 void ButtonBoxWidgetsPage::RecreateBoxes()
 {
-    // The selection mode is a creation-time style, so the controls have to be
+    // The selection mode is a creation-time style, so the control has to be
     // replaced when it changes (the same is done for other style flags in the
     // other pages of this sample).
     wxButtonBox *box = new wxButtonBox(this, wxID_ANY, wxDefaultPosition,
@@ -370,12 +335,7 @@ void ButtonBoxWidgetsPage::RecreateBoxes()
     delete m_box;
     m_box = box;
 
-    wxGenericButtonBox *generic =
-        new wxGenericButtonBox(this, wxID_ANY, wxDefaultPosition,
-                               wxDefaultSize, GetModeStyle());
-    m_sizerBoxes->Replace(m_generic, generic);
-    delete m_generic;
-    m_generic = generic;
+    FillBox();
 
     ForEach([this](wxButtonBoxBase& b) { FillBox(b); });
 
@@ -395,9 +355,7 @@ void ButtonBoxWidgetsPage::OnReset(wxCommandEvent& WXUNUSED(event))
 
 void ButtonBoxWidgetsPage::OnButtonBox(wxCommandEvent& event)
 {
-    wxLogMessage("%s: segment %d (\"%s\") %s",
-                 event.GetEventObject() == m_box ? "wxButtonBox"
-                                                 : "wxGenericButtonBox",
+    wxLogMessage("wxButtonBox: segment %d (\"%s\") %s",
                  event.GetInt(),
                  event.GetString(),
                  event.GetExtraLong() ? "selected/clicked" : "deselected");
