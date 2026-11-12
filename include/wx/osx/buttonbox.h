@@ -10,6 +10,8 @@
 #ifndef _WX_OSX_BUTTONBOX_H_
 #define _WX_OSX_BUTTONBOX_H_
 
+#include <vector>
+
 // Mixin interface implemented by the Cocoa peer (see src/osx/cocoa/buttonbox.mm).
 // Could be moved to wx/osx/private/ once the control is merged.
 class wxButtonBoxImpl
