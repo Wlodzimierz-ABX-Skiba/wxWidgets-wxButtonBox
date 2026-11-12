@@ -105,13 +105,13 @@ static const char svg_button_dark[] = R"svg(<svg xmlns="http://www.w3.org/2000/s
   <rect x="4" y="7.5" width="8" height="1" fill="#d4d4d4"/>
 </svg>)svg";
 
-static const char svg_buttonbox_light[] = R"(<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+static const char svg_buttonbox_light[] = R"svg(<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
   <rect x="1.5" y="4.5" width="13" height="7" rx="2" fill="#ffffff" stroke="#404040"/>
   <rect x="5.5" y="4.5" width="5" height="7" fill="#3b82f6"/>
   <path d="M5.5 4.5v7M10.5 4.5v7" fill="none" stroke="#404040"/>
 </svg>)svg";
 
-static const char svg_buttonbox_dark[] = R"(<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+static const char svg_buttonbox_dark[] = R"svg(<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
   <rect x="1.5" y="4.5" width="13" height="7" rx="2" fill="#2b2b2b" stroke="#d0d0d0"/>
   <rect x="5.5" y="4.5" width="5" height="7" fill="#5b9dff"/>
   <path d="M5.5 4.5v7M10.5 4.5v7" fill="none" stroke="#d0d0d0"/>
