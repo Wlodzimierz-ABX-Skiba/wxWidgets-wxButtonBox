@@ -17,13 +17,13 @@
 wxIMPLEMENT_DYNAMIC_CLASS(wxButtonBox, wxControl);
 
 // ----------------------------------------------------------------------------
-// Objective-C view: routes the action to wxWidgetImpl
+// Objective-C view: wxWidgetCocoaImpl::InstallEventHandler() connects its
+// target/action to controlAction:, which calls wxButtonBox::OSXHandleClicked()
 // ----------------------------------------------------------------------------
 
 @interface wxNSSegmentedControl : NSSegmentedControl
 {
 }
-- (void)segmentedAction:(id)sender;
 @end
 
 @implementation wxNSSegmentedControl
@@ -36,14 +36,6 @@ wxIMPLEMENT_DYNAMIC_CLASS(wxButtonBox, wxControl);
         initialized = YES;
         wxOSXCocoaClassAddWXMethods(self);
     }
-}
-
-- (void)segmentedAction:(id)sender
-{
-    wxUnusedVar(sender);
-    wxWidgetCocoaImpl* impl = (wxWidgetCocoaImpl*)wxWidgetImpl::FindFromWXWidget(self);
-    if ( impl )
-        impl->OSXHandleClicked(0.0);    // [CHECK] same call as wxNSButton
 }
 
 @end
@@ -187,8 +179,6 @@ static wxWidgetImplType* CreateButtonBoxImpl(wxWindowMac* wxpeer,
     NSRect r = wxOSXGetFrameForControl(wxpeer, pos, size);
     wxNSSegmentedControl* v = [[wxNSSegmentedControl alloc] initWithFrame:r];
     [v setSegmentCount:0];
-    [v setTarget:v];
-    [v setAction:@selector(segmentedAction:)];
 
     wxButtonBoxCocoaImpl* c = new wxButtonBoxCocoaImpl(wxpeer, v);
     c->SetMode(style);
