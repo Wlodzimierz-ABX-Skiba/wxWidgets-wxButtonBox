@@ -337,8 +337,6 @@ void ButtonBoxWidgetsPage::RecreateBoxes()
 
     FillBox();
 
-    ForEach([this](wxButtonBoxBase& b) { FillBox(b); });
-
     m_sizerBoxes->Layout();
 }
 
