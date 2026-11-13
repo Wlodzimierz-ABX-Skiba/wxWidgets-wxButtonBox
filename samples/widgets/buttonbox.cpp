@@ -82,16 +82,8 @@ private:
     wxSizer *m_sizerBox;
     wxButtonBox *m_box;
 
-    wxDECLARE_EVENT_TABLE();
     DECLARE_WIDGETS_PAGE(ButtonBoxWidgetsPage)
 };
-
-// ----------------------------------------------------------------------------
-// event tables
-// ----------------------------------------------------------------------------
-
-wxBEGIN_EVENT_TABLE(ButtonBoxWidgetsPage, WidgetsPage)
-wxEND_EVENT_TABLE()
 
 // ============================================================================
 // implementation
