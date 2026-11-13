@@ -77,11 +77,24 @@ int wxGenericButtonBox::FindSegment(const wxObject* button) const
 
 void wxGenericButtonBox::Relayout()
 {
+    // The best size depends on the segments, so it must be recomputed.
+    //
+    // Note that SetInitialSize(GetSize()) must not be used here: it turns the
+    // current size into the minimum size, and while there are no segments yet
+    // this is 0x0, which would keep the control invisible forever.
     InvalidateBestSize();
-    Layout();
-    SetInitialSize(GetSize());
-    if ( GetParent() )
+
+    if ( GetContainingSizer() )
+    {
+        // Let the sizer give us the new best size and lay out our children
+        // from our size event handler.
         GetParent()->Layout();
+    }
+    else
+    {
+        SetSize(GetBestSize());
+        Layout();
+    }
 }
 
 // Label/bitmap changes may switch between wxToggleButton and
