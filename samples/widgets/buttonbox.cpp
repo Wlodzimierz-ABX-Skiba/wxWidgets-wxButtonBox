@@ -52,7 +52,7 @@ public:
         m_textLabel = nullptr;
         m_spinIndex = nullptr;
         m_spinWidth = nullptr;
-        m_sizerBoxes = nullptr;
+        m_sizerBox = nullptr;
         m_box = nullptr;
     }
 
@@ -79,7 +79,7 @@ private:
     wxSpinCtrl *m_spinIndex,
                *m_spinWidth;
 
-    wxSizer *m_sizerBoxes;
+    wxSizer *m_sizerBox;
     wxButtonBox *m_box;
 
     wxDECLARE_EVENT_TABLE();
@@ -201,17 +201,19 @@ void ButtonBoxWidgetsPage::CreateContent()
     }
 
     // right pane: the control itself (native under macOS, generic elsewhere)
-    m_sizerBoxes = new wxBoxSizer(wxVERTICAL);
+    m_sizerBox = new wxBoxSizer(wxVERTICAL);
 
     m_box = new wxButtonBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                             GetModeStyle());
-    m_sizerBoxes->Add(m_box, wxSizerFlags().Border(wxBOTTOM, 20));
+    m_sizerBox->AddStretchSpacer();
+    m_sizerBox->Add(m_box, wxSizerFlags().Centre().Border());
+    m_sizerBox->AddStretchSpacer(2);
 
     FillBox();
     
     sizerTop->Add(sizerLeft, wxSizerFlags().Expand().Border(wxALL, 10));
     sizerTop->Add(sizerOps, wxSizerFlags().Expand().Border(wxALL, 10));
-    sizerTop->Add(m_sizerBoxes, wxSizerFlags(1).Expand().Border(wxALL, 10));
+    sizerTop->Add(m_sizerBox, wxSizerFlags(1).Expand().Border(wxALL, 10));
 
     SetSizer(sizerTop);
 
@@ -341,13 +343,13 @@ void ButtonBoxWidgetsPage::RecreateBox()
     // other pages of this sample).
     wxButtonBox *box = new wxButtonBox(this, wxID_ANY, wxDefaultPosition,
                                        wxDefaultSize, GetModeStyle());
-    m_sizerBoxes->Replace(m_box, box);
+    m_sizerBox->Replace(m_box, box);
     delete m_box;
     m_box = box;
 
     FillBox();
 
-    m_sizerBoxes->Layout();
+    m_sizerBox->Layout();
 }
 
 void ButtonBoxWidgetsPage::RecreateWidget()
