@@ -2441,7 +2441,9 @@ ____CORE_SRC_FILENAMES_OBJECTS =  \
 	$(OBJS)\monodll_powercmn.o \
 	$(OBJS)\monodll_curbndl.o \
 	$(OBJS)\monodll_webpdecoder.o \
-	$(OBJS)\monodll_imagwebp.o
+	$(OBJS)\monodll_imagwebp.o \
+	$(OBJS)\monodll_buttonbox.o \
+	$(OBJS)\monodll_buttonboxcmn.o
 endif
 endif
 ifeq ($(USE_GUI),1)
@@ -2782,7 +2784,9 @@ ____CORE_SRC_FILENAMES_OBJECTS =  \
 	$(OBJS)\monodll_powercmn.o \
 	$(OBJS)\monodll_curbndl.o \
 	$(OBJS)\monodll_webpdecoder.o \
-	$(OBJS)\monodll_imagwebp.o
+	$(OBJS)\monodll_imagwebp.o \
+	$(OBJS)\monodll_buttonbox.o \
+	$(OBJS)\monodll_buttonboxcmn.o
 endif
 endif
 ifeq ($(USE_STC),1)
@@ -3315,7 +3319,9 @@ ____CORE_SRC_FILENAMES_1_OBJECTS =  \
 	$(OBJS)\monolib_powercmn.o \
 	$(OBJS)\monolib_curbndl.o \
 	$(OBJS)\monolib_webpdecoder.o \
-	$(OBJS)\monolib_imagwebp.o
+	$(OBJS)\monolib_imagwebp.o \
+	$(OBJS)\monolib_buttonbox.o \
+	$(OBJS)\monolib_buttonboxcmn.o
 endif
 endif
 ifeq ($(USE_GUI),1)
@@ -3656,7 +3662,9 @@ ____CORE_SRC_FILENAMES_1_OBJECTS =  \
 	$(OBJS)\monolib_powercmn.o \
 	$(OBJS)\monolib_curbndl.o \
 	$(OBJS)\monolib_webpdecoder.o \
-	$(OBJS)\monolib_imagwebp.o
+	$(OBJS)\monolib_imagwebp.o \
+	$(OBJS)\monolib_buttonbox.o \
+	$(OBJS)\monolib_buttonboxcmn.o
 endif
 endif
 ifeq ($(USE_STC),1)
@@ -4062,7 +4070,9 @@ ____CORE_SRC_FILENAMES_2_OBJECTS =  \
 	$(OBJS)\coredll_powercmn.o \
 	$(OBJS)\coredll_curbndl.o \
 	$(OBJS)\coredll_webpdecoder.o \
-	$(OBJS)\coredll_imagwebp.o
+	$(OBJS)\coredll_imagwebp.o \
+	$(OBJS)\coredll_buttonbox.o \
+	$(OBJS)\coredll_buttonboxcmn.o
 endif
 endif
 ifeq ($(USE_GUI),1)
@@ -4403,7 +4413,9 @@ ____CORE_SRC_FILENAMES_2_OBJECTS =  \
 	$(OBJS)\coredll_powercmn.o \
 	$(OBJS)\coredll_curbndl.o \
 	$(OBJS)\coredll_webpdecoder.o \
-	$(OBJS)\coredll_imagwebp.o
+	$(OBJS)\coredll_imagwebp.o \
+	$(OBJS)\coredll_buttonbox.o \
+	$(OBJS)\coredll_buttonboxcmn.o
 endif
 endif
 ifeq ($(MONOLITHIC),0)
@@ -4765,7 +4777,9 @@ ____CORE_SRC_FILENAMES_3_OBJECTS =  \
 	$(OBJS)\corelib_powercmn.o \
 	$(OBJS)\corelib_curbndl.o \
 	$(OBJS)\corelib_webpdecoder.o \
-	$(OBJS)\corelib_imagwebp.o
+	$(OBJS)\corelib_imagwebp.o \
+	$(OBJS)\corelib_buttonbox.o \
+	$(OBJS)\corelib_buttonboxcmn.o
 endif
 endif
 ifeq ($(USE_GUI),1)
@@ -5106,7 +5120,9 @@ ____CORE_SRC_FILENAMES_3_OBJECTS =  \
 	$(OBJS)\corelib_powercmn.o \
 	$(OBJS)\corelib_curbndl.o \
 	$(OBJS)\corelib_webpdecoder.o \
-	$(OBJS)\corelib_imagwebp.o
+	$(OBJS)\corelib_imagwebp.o \
+	$(OBJS)\corelib_buttonbox.o \
+	$(OBJS)\corelib_buttonboxcmn.o
 endif
 endif
 ifeq ($(SHARED),1)
@@ -10441,6 +10457,16 @@ $(OBJS)\monodll_imagwebp.o: ../../src/common/imagwebp.cpp
 	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
 endif
 
+ifeq ($(USE_GUI),1)
+$(OBJS)\monodll_buttonbox.o: ../../src/generic/buttonbox.cpp
+	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\monodll_buttonboxcmn.o: ../../src/common/buttonboxcmn.cpp
+	$(CXX) -c -o $@ $(MONODLL_CXXFLAGS) $(CPPDEPS) $<
+endif
+
 $(OBJS)\monodll_version_rc.o: ../../src/msw/version.rc
 	$(WINDRES) -i$< -o$@   --include-dir ../../src/tiff/libtiff --include-dir ../../src/jpeg --include-dir ../../src/png --include-dir ../../3rdparty/libwebp/src $(__INC_LUNASVG_p) --include-dir ../../src/zlib --include-dir ../../3rdparty/pcre/src/wx --include-dir ../../src/expat/expat/lib   --define __WXMSW__ $(__WXUNIV_DEFINE_p_67) $(__DEBUG_DEFINE_p_67) $(__NDEBUG_DEFINE_p_65) $(__EXCEPTIONS_DEFINE_p_65) $(__RTTI_DEFINE_p_65) $(__THREAD_DEFINE_p_65) --include-dir $(SETUPHDIR) --include-dir ../../include $(__CAIRO_INCLUDEDIR_p) --define WXBUILDING --define WXDLLNAME=wx$(PORTNAME)$(WXUNIVNAME)$(WX_VERSION_NODOT)u$(WXDEBUGFLAG)$(WX_LIB_FLAVOUR)$(WXCOMPILER)$(VENDORTAG) --include-dir ../../src/stc/scintilla/include --include-dir ../../src/stc/scintilla/src --define __WX__ --include-dir ../../src/stc/lexilla/access --include-dir ../../src/stc/lexilla/include --include-dir ../../src/stc/lexilla/lexlib --include-dir ../../src/stc/lexilla/include --include-dir ../../src/stc/scintilla/include --include-dir ../../src/stc/scintilla/src --include-dir ../../include/wx/msw/wrl --include-dir ../../3rdparty/webview2/build/native/include --define wxUSE_BASE=1 --define WXMAKINGDLL
 
@@ -13080,6 +13106,16 @@ $(OBJS)\monolib_imagwebp.o: ../../src/common/imagwebp.cpp
 	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
 endif
 
+ifeq ($(USE_GUI),1)
+$(OBJS)\monolib_buttonbox.o: ../../src/generic/buttonbox.cpp
+	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\monolib_buttonboxcmn.o: ../../src/common/buttonboxcmn.cpp
+	$(CXX) -c -o $@ $(MONOLIB_CXXFLAGS) $(CPPDEPS) $<
+endif
+
 $(OBJS)\basedll_dummy.o: ../../src/common/dummy.cpp
 	$(CXX) -c -o $@ $(BASEDLL_CXXFLAGS) $(CPPDEPS) $<
 
@@ -15653,6 +15689,16 @@ $(OBJS)\coredll_imagwebp.o: ../../src/common/imagwebp.cpp
 	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
 endif
 
+ifeq ($(USE_GUI),1)
+$(OBJS)\coredll_buttonbox.o: ../../src/generic/buttonbox.cpp
+	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\coredll_buttonboxcmn.o: ../../src/common/buttonboxcmn.cpp
+	$(CXX) -c -o $@ $(COREDLL_CXXFLAGS) $(CPPDEPS) $<
+endif
+
 $(OBJS)\corelib_dummy.o: ../../src/common/dummy.cpp
 	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
 
@@ -17440,6 +17486,16 @@ endif
 
 ifeq ($(USE_GUI),1)
 $(OBJS)\corelib_imagwebp.o: ../../src/common/imagwebp.cpp
+	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\corelib_buttonbox.o: ../../src/generic/buttonbox.cpp
+	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
+endif
+
+ifeq ($(USE_GUI),1)
+$(OBJS)\corelib_buttonboxcmn.o: ../../src/common/buttonboxcmn.cpp
 	$(CXX) -c -o $@ $(CORELIB_CXXFLAGS) $(CPPDEPS) $<
 endif
 
