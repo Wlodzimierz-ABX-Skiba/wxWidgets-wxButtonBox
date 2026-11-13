@@ -58,12 +58,12 @@ public:
 
     virtual void CreateContent() override;
     virtual wxWindow *GetWidget() const override { return m_box; }
-    virtual void RecreatePage() override;
+    virtual void RecreateWidget() override;
 
 private:
     void Reset();
     long GetModeStyle() const;
-    void RecreateBoxes();
+    void RecreateBox();
     void FillBox();
     void AddSegment(size_t pos, const wxString& label);
     wxBitmapBundle GetNextBitmap() const;
@@ -81,7 +81,21 @@ private:
 
     wxSizer *m_sizerBoxes;
     wxButtonBox *m_box;
+
+    wxDECLARE_EVENT_TABLE();
+    DECLARE_WIDGETS_PAGE(ButtonBoxWidgetsPage)
 };
+
+// ----------------------------------------------------------------------------
+// event tables
+// ----------------------------------------------------------------------------
+
+wxBEGIN_EVENT_TABLE(ButtonBoxWidgetsPage, WidgetsPage)
+wxEND_EVENT_TABLE()
+
+// ============================================================================
+// implementation
+// ============================================================================
 
 #if defined(__WXUNIVERSAL__)
     #define FAMILY_CTRLS UNIVERSAL_CTRLS
@@ -92,10 +106,6 @@ private:
 IMPLEMENT_WIDGETS_PAGE(ButtonBoxWidgetsPage, "ButtonBox",
                        FAMILY_CTRLS
                        );
-
-// ============================================================================
-// implementation
-// ============================================================================
 
 namespace
 {
@@ -144,7 +154,7 @@ void ButtonBoxWidgetsPage::CreateContent()
                    wxSizerFlags().CenterHorizontal());
 
     // middle pane: operations on segments
-    wxSizer *sizerOps = new wxStaticBoxSizer(wxVERTICAL, this, "&Segments");
+    wxStaticBoxSizer *sizerOps = new wxStaticBoxSizer(wxVERTICAL, this, "&Segments");
     wxWindow* const box = sizerOps->GetStaticBox();
 
     wxFlexGridSizer *sizerParams = new wxFlexGridSizer(2, wxSize(5, 5));
@@ -208,11 +218,11 @@ void ButtonBoxWidgetsPage::CreateContent()
     // events
     Bind(wxEVT_BUTTON, &ButtonBoxWidgetsPage::OnReset, this, ButtonBoxPage_Reset);
     Bind(wxEVT_BUTTONBOX, &ButtonBoxWidgetsPage::OnButtonBox, this);
-    Bind(wxEVT_RADIOBOX, [this](wxCommandEvent&) { RecreateBoxes(); },
+    Bind(wxEVT_RADIOBOX, [this](wxCommandEvent&) { RecreateBox(); },
          m_radioMode->GetId());
-    Bind(wxEVT_CHECKBOX, [this](wxCommandEvent&) { RecreateBoxes(); },
+    Bind(wxEVT_CHECKBOX, [this](wxCommandEvent&) { RecreateBox(); },
          m_chkLabels->GetId());
-    Bind(wxEVT_CHECKBOX, [this](wxCommandEvent&) { RecreateBoxes(); },
+    Bind(wxEVT_CHECKBOX, [this](wxCommandEvent&) { RecreateBox(); },
          m_chkBitmaps->GetId());
 
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&)
@@ -324,7 +334,7 @@ void ButtonBoxWidgetsPage::FillBox()
         AddSegment(n, labels[n]);
 }
 
-void ButtonBoxWidgetsPage::RecreateBoxes()
+void ButtonBoxWidgetsPage::RecreateBox()
 {
     // The selection mode is a creation-time style, so the control has to be
     // replaced when it changes (the same is done for other style flags in the
@@ -340,15 +350,15 @@ void ButtonBoxWidgetsPage::RecreateBoxes()
     m_sizerBoxes->Layout();
 }
 
-void ButtonBoxWidgetsPage::RecreatePage()
+void ButtonBoxWidgetsPage::RecreateWidget()
 {
-    RecreateBoxes();
+    RecreateBox();
 }
 
 void ButtonBoxWidgetsPage::OnReset(wxCommandEvent& WXUNUSED(event))
 {
     Reset();
-    RecreateBoxes();
+    RecreateBox();
 }
 
 void ButtonBoxWidgetsPage::OnButtonBox(wxCommandEvent& event)
