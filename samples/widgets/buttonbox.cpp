@@ -97,14 +97,14 @@ wxEND_EVENT_TABLE()
 // implementation
 // ============================================================================
 
-#if defined(__WXUNIVERSAL__)
-    #define FAMILY_CTRLS UNIVERSAL_CTRLS
-#else
+#if defined(wxHAS_NATIVE_BUTTONBOX)
     #define FAMILY_CTRLS NATIVE_CTRLS
+#else
+    #define FAMILY_CTRLS GENERIC_CTRLS
 #endif
 
 IMPLEMENT_WIDGETS_PAGE(ButtonBoxWidgetsPage, "ButtonBox",
-                       FAMILY_CTRLS
+                       FAMILY_CTRLS | WITH_ITEMS_CTRLS
                        );
 
 namespace
@@ -126,9 +126,9 @@ enum
 
 const wxString g_modes[] =
 {
-    "wxBB_SELECT_ONE",
-    "wxBB_SELECT_ANY",
-    "wxBB_MOMENTARY"
+    "select one",
+    "select any",
+    "momentary"
 };
 
 } // anonymous namespace
