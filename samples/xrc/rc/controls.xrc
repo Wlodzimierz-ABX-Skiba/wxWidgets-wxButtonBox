@@ -278,7 +278,7 @@
                                 <flag>wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                 <border>5</border>
                                 <object class="wxStaticText">
-                                    <label>wxBB_SELECT_ANY style:</label>
+                                    <label>select any style:</label>
                                 </object>
                             </object>
                             <object class="sizeritem">
