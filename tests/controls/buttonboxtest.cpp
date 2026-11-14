@@ -82,8 +82,12 @@ struct LastEvent
 {
     explicit LastEvent(wxButtonBox* box)
     {
+        // This handler is called before the one of EventCounter created earlier
+        // and as the latter doesn't skip command events, we must do it here.
         box->Bind(wxEVT_BUTTONBOX, [this](wxCommandEvent& event)
         {
+            event.Skip();
+
             ++count;
             index = event.GetInt();
             selected = event.GetExtraLong() != 0;
