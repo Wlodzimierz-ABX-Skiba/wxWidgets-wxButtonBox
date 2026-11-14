@@ -202,7 +202,7 @@ void ButtonBoxWidgetsPage::CreateContent()
     m_sizerBox->AddStretchSpacer(2);
 
     FillBox();
-    
+
     sizerTop->Add(sizerLeft, wxSizerFlags().Expand().Border(wxALL, 10));
     sizerTop->Add(sizerOps, wxSizerFlags().Expand().Border(wxALL, 10));
     sizerTop->Add(m_sizerBox, wxSizerFlags(1).Expand().Border(wxALL, 10));
