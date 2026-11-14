@@ -12,7 +12,7 @@
 #if wxUSE_BUTTONBOX
 
 #include "wx/buttonbox.h"
-#include "wx/generic/buttonbox.h"        // allow build even if native control is built 
+#include "wx/generic/buttonbox.h"        // allow build even if native control is built
 
 #ifndef WX_PRECOMP
     #include "wx/sizer.h"
