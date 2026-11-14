@@ -2806,6 +2806,7 @@ IMPORTANT: please read docs/tech/tn0016.txt before modifying this file!
     src/xrc/xmlres.cpp
     src/xrc/xmlrsall.cpp
     src/xrc/xh_bookctrlbase.cpp
+    src/xrc/xh_buttonbox.cpp
 </set>
 <set var="XRC_HDR" hints="files">
     wx/xrc/xh_activityindicator.h
@@ -2878,6 +2879,7 @@ IMPORTANT: please read docs/tech/tn0016.txt before modifying this file!
     wx/xrc/xh_wizrd.h
     wx/xrc/xmlres.h
     wx/xrc/xh_bookctrlbase.h
+    wx/xrc/xh_buttonbox.h
 </set>
 
 
