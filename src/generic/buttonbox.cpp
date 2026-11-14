@@ -214,7 +214,8 @@ void wxGenericButtonBox::SetSelected(size_t n, bool selected)
     if ( HasFlag(wxBB_MOMENTARY) )
         return;
 
-    if ( HasFlag(wxBB_SELECT_ONE) )
+    // Note that wxBB_SELECT_ONE is 0, so it can't be tested with HasFlag().
+    if ( !HasFlag(wxBB_SELECT_ANY) )
     {
         if ( selected )
             SetSelection((int)n);
